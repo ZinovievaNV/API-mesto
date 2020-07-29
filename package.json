@@ -1,0 +1,43 @@
+{
+  "name": "sprint15",
+  "version": "0.0.1",
+  "description": "Деплой бэкенда",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZinovievaNV/API-mesto.git"
+  },
+  "author": "Zinovieva Natalya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZinovievaNV/API-mesto/issues"
+  },
+  "homepage": "https://github.com/ZinovievaNV/API-mesto#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "celebrate": "^12.1.2",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.1.3",
+    "express-winston": "^4.0.5",
+    "helmet": "^3.23.3",
+    "is-image-url": "^1.1.8",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.20",
+    "mongoose-unique-validator": "^2.0.3",
+    "validator": "^13.1.1",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.3.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "nodemon": "^2.0.4"
+  }
+}
