@@ -37,7 +37,6 @@ async function start() {
     });
 
     app.listen(PORT, () => {
-      console.log(process.env.NODE_ENV);
       console.log(`App listening on port ${PORT}`);
     });
   } catch (error) {
@@ -45,11 +44,13 @@ async function start() {
   }
 }
 app.use(requestLogger);
+
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
