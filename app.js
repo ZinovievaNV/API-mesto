@@ -43,6 +43,7 @@ async function start() {
     console.log(`${error} В старте`);
   }
 }
+
 app.use(requestLogger);
 
 app.get('/crash-test', () => {
