@@ -5,11 +5,11 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const {createUser, login} = require('./controllers/auth');
-const {celebrate, Joi, errors} = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
+const { createUser, login } = require('./controllers/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const {PORT = 3000} = process.env;
+const { PORT = 3000 } = process.env;
 
 const auth = require('./middlewares/auth');
 const cardsRouter = require('./routes/cards');
@@ -25,7 +25,7 @@ app.use(limiter);
 app.use(helmet());
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 async function start() {
   try {
@@ -62,26 +62,26 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-app.post('/signin',  celebrate({
+app.post('/signin', celebrate({
   body: Joi.object().keys({
     password: Joi.string().required().regex(/^[a-zA-Z0-9_-]{6,15}$/),
     email: Joi.string().required().regex(/^([\w0-9_-]\.)*[\w0-9_-]+@[\w0-9_-]+(\.[\w0-9_-]+)*\.\w{2,6}$/),
   }),
-}),login);
+}), login);
 
 app.use(auth);
 app.use('/cards', cardsRouter);
 app.use('/users', usersRouter);
 app.all('*', (req, res, next) => {
-  res.status(404).send({message: 'Запрашиваемый ресурс не найден'});
+  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
   next();
 });
 app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
-  const {statusCode = 500, message} = err;
+  const { statusCode = 500, message } = err;
 
-  res.status(statusCode).send({message: statusCode === 500 ? 'На сервере произошла ошибка' : message});
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
 

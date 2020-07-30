@@ -1,10 +1,10 @@
 const User = require('../models/user');
-const NotFoundError = require('../error/not-found-err');//404 код
+const NotFoundError = require('../error/not-found-err');// 404 код
 
 module.exports = {
   getUsers(req, res, next) {
     User.find({})
-      .then((user) => res.send({data: user}))
+      .then((user) => res.send({ data: user }))
       .catch(next);
   },
 
@@ -13,15 +13,11 @@ module.exports = {
 
       .then((user) => {
         if (!user) {
-          throw new NotFoundError('Нет пользователя с таким id')
+          throw new NotFoundError('Нет пользователя с таким id');
         }
-        res.send({data: user})
-        })
-      .catch((error)=>{
-        console.log(error);
+        res.send({ data: user });
       })
       .catch(next);
-
   },
 
 };

@@ -25,7 +25,7 @@ module.exports = {
       .catch(next);
   },
   // eslint-disable-next-line consistent-return
-  createUser(req, res,next) {
+  createUser(req, res, next) {
     const {
       name, about, avatar, email,
     } = req.body;
@@ -58,7 +58,7 @@ module.exports = {
           }
           return res.status(400).send({ error: error.message });
         }
-        next(error)//не знаю правильно ли
+        next(error);
       });
   },
 };
