@@ -8,7 +8,9 @@ const rateLimit = require('express-rate-limit');
 const { celebrate, Joi, errors } = require('celebrate');
 const { createUser, login } = require('./controllers/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const NotFoundError = require('error/not-found-err');
+const { createUserValidation, loginUserValidation } = require('./middlewares/user-validation');
+const NotFoundError = require('./error/not-found-err');
+const handlerError = require('./middlewares/handler-error');
 
 const { PORT = 3000 } = process.env;
 
@@ -53,22 +55,8 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    about: Joi.string().required().min(2).max(30),
-    avatar: Joi.string().required().regex(/^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*(?:\.(?:[a-zA-Z\u00a1-\uffff]{2,}))\.?)(?::\d{2,})?(?:[/?#]\S*)?$/),
-    email: Joi.string().required().regex(/^([\w0-9_-]\.)*[\w0-9_-]+@[\w0-9_-]+(\.[\w0-9_-]+)*\.\w{2,6}$/),
-    password: Joi.string().required().regex(/^[a-zA-Z0-9_-]{6,15}$/),
-  }),
-}), createUser);
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    password: Joi.string().required().regex(/^[a-zA-Z0-9_-]{6,15}$/),
-    email: Joi.string().required().regex(/^([\w0-9_-]\.)*[\w0-9_-]+@[\w0-9_-]+(\.[\w0-9_-]+)*\.\w{2,6}$/),
-  }),
-}), login);
+app.post('/signup', createUserValidation, createUser);
+app.post('/signin', loginUserValidation, login);
 
 app.use(auth);
 app.use('/cards', cardsRouter);
@@ -79,11 +67,6 @@ app.all('*', () => {
 });
 app.use(errorLogger);
 app.use(errors());
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-  next();
-});
+app.use(handlerError);
 
 start();
