@@ -5,6 +5,7 @@ const isImageUrl = require('is-image-url');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const BadRequest = require('../error/bad-request');
+const Unauthorized = require('/error/unauthorized');
 
 module.exports = {
   login(req, res, next) {
@@ -20,9 +21,10 @@ module.exports = {
         });
       })
       .catch((error) => {
-        res.status(401).send({ message: `${error.message} ошибка в login` });
+        //res.status(401).send({ message: `${error.message} ошибка в login` });
+        throw new Unauthorized(`${error.message}`);//не знаю что написать сюда!!-----------------
       })
-      .catch(next);
+
   },
   // eslint-disable-next-line consistent-return
   createUser(req, res, next) {

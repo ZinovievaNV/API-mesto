@@ -8,6 +8,7 @@ const rateLimit = require('express-rate-limit');
 const { celebrate, Joi, errors } = require('celebrate');
 const { createUser, login } = require('./controllers/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const NotFoundError = require('error/not-found-err');
 
 const { PORT = 3000 } = process.env;
 
@@ -72,9 +73,9 @@ app.post('/signin', celebrate({
 app.use(auth);
 app.use('/cards', cardsRouter);
 app.use('/users', usersRouter);
-app.all('*', (req, res, next) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
-  next();
+app.all('*', () => {
+  throw new Unauthorized('Запрашиваемый ресурс не найден');
+  //здесь был next() , но нужен ли он тут?
 });
 app.use(errorLogger);
 app.use(errors());
