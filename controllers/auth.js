@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Unauthorized = require('../error/unauthorized');
+const Conflict = require('../error/conflict');
+const BadRequest = require('../error/bad-request');
 
 module.exports = {
   login(req, res) {
@@ -18,13 +20,12 @@ module.exports = {
         });
       })
       .catch((error) => {
-        //res.status(401).send({ message: `${error.message} ошибка в login` });
-        throw new Unauthorized(`${error.message}`);//не знаю что написать сюда!!-----------------
-      })
-
+        // res.status(401).send({ message: `${error.message} ошибка в login` });
+        throw new Unauthorized(`${error.message}`);// не знаю что написать сюда!!-----------------
+      });
   },
   // eslint-disable-next-line consistent-return
-  createUser(req, res, next) {
+  createUser(req, res) {
     const {
       name, about, avatar, email,
     } = req.body;
@@ -33,14 +34,16 @@ module.exports = {
       .then((hash) => User.create({
         name, about, avatar, email, password: hash,
       }))
-      .then((user) => res.status(201).send({ data: name,about,avatar,email, message: 'Вы создались!' }))
+      .then(() => res.status(201).send({
+        data: name, about, avatar, email, message: 'Вы создались!',
+      }))
       // eslint-disable-next-line consistent-return
       .catch((error) => {
         if (error.name === 'ValidationError') {
           if (error.errors.email && error.errors.email.kind === 'unique') {
-            return res.status(409).send({ error: error.errors.email.properties.message });
+            throw new Conflict(error.errors.email.properties.message);
           }
-          return res.status(400).send({ error: error.message });
+          throw new BadRequest(error.message);
         }
       });
   },

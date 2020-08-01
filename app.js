@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const { createUser, login } = require('./controllers/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { createUserValidation, loginUserValidation } = require('./middlewares/user-validation');
@@ -62,8 +62,7 @@ app.use(auth);
 app.use('/cards', cardsRouter);
 app.use('/users', usersRouter);
 app.all('*', () => {
-  throw new Unauthorized('Запрашиваемый ресурс не найден');
-  //здесь был next() , но нужен ли он тут?
+  throw new NotFoundError('Запрашиваемый ресурс не найден');
 });
 app.use(errorLogger);
 app.use(errors());

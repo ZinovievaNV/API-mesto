@@ -18,7 +18,7 @@ module.exports = {
 
   deleteCardById(req, res, next) {
     Card.findById({ _id: req.params.cardId })
-      //.orFail(() => Error('Карточка не найдена'))
+      // .orFail(() => Error('Карточка не найдена'))
       // eslint-disable-next-line consistent-return
       .then((card) => {
         if (!(card.owner.toString() === req.user._id.toString())) {

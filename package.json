@@ -1,6 +1,6 @@
 {
   "name": "sprint15",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Деплой бэкенда.Развернутый сервер API",
   "main": "app.js",
   "scripts": {
@@ -30,15 +30,15 @@
     "is-image-url": "^1.1.8",
     "joi-objectid": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.20",
+    "mongoose": "^5.9.27",
     "mongoose-unique-validator": "^2.0.3",
     "validator": "^13.1.1",
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "eslint": "^7.3.0",
+    "eslint": "^7.6.0",
     "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-import": "^2.22.0",
     "nodemon": "^2.0.4"
   }
 }
