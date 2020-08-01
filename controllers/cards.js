@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const Card = require('../models/card');
 const NoAccessRights = require('../error/no-access-rights');// нет прав доступа 403
+const NotFoundError = require('../error/not-found-err');
 
 module.exports = {
   getCards(req, res, next) {
@@ -18,7 +19,9 @@ module.exports = {
 
   deleteCardById(req, res, next) {
     Card.findById({ _id: req.params.cardId })
-      // .orFail(() => Error('Карточка не найдена'))
+      .orFail(() => {
+        throw new NotFoundError('Карточка не найдена');
+      })
       // eslint-disable-next-line consistent-return
       .then((card) => {
         if (!(card.owner.toString() === req.user._id.toString())) {
