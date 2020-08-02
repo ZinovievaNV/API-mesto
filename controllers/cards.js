@@ -6,7 +6,7 @@ const NotFoundError = require('../error/not-found-err');
 module.exports = {
   getCards(req, res, next) {
     Card.find({})
-      .populate(['owner', 'likes'])
+      .populate(['owner'])
       .then((card) => res.send({ data: card }))
       .catch(next);
   },
@@ -19,9 +19,7 @@ module.exports = {
 
   deleteCardById(req, res, next) {
     Card.findById({ _id: req.params.cardId })
-      .orFail(() => {
-        throw new NotFoundError('Карточка не найдена');
-      })
+      .orFail(new NotFoundError('Карточка не найдена'))
       // eslint-disable-next-line consistent-return
       .then((card) => {
         if (!(card.owner.toString() === req.user._id.toString())) {

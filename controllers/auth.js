@@ -7,7 +7,7 @@ const Conflict = require('../error/conflict');
 const BadRequest = require('../error/bad-request');
 
 module.exports = {
-  login(req, res) {
+  login(req, res, next) {
     const { email, password } = req.body;
 
     return User.findUserByCredentials(email, password)
@@ -20,12 +20,11 @@ module.exports = {
         });
       })
       .catch((error) => {
-        // res.status(401).send({ message: `${error.message} ошибка в login` });
-        throw new Unauthorized(`${error.message}`);// не знаю что написать сюда!!-----------------
+        next(new Unauthorized(`${error.name}`));
       });
   },
   // eslint-disable-next-line consistent-return
-  createUser(req, res) {
+  createUser(req, res, next) {
     const {
       name, about, avatar, email,
     } = req.body;
@@ -41,10 +40,11 @@ module.exports = {
       .catch((error) => {
         if (error.name === 'ValidationError') {
           if (error.errors.email && error.errors.email.kind === 'unique') {
-            throw new Conflict(error.errors.email.properties.message);
+            next(new Conflict(error.errors.email.properties.message));
           }
-          throw new BadRequest(error.message);
+          next(new BadRequest(error.message));
         }
+        next(error);
       });
   },
 };
