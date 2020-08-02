@@ -20,7 +20,7 @@ module.exports = {
         });
       })
       .catch((error) => {
-        next(new Unauthorized(`${error.name}`));
+        next(new Unauthorized(`${error.message}`));
       });
   },
   // eslint-disable-next-line consistent-return
@@ -41,10 +41,12 @@ module.exports = {
         if (error.name === 'ValidationError') {
           if (error.errors.email && error.errors.email.kind === 'unique') {
             next(new Conflict(error.errors.email.properties.message));
+          } else {
+            next(new BadRequest(error.message));
           }
-          next(new BadRequest(error.message));
+        } else {
+          next(error);
         }
-        next(error);
       });
   },
 };
