@@ -1,6 +1,6 @@
 {
   "name": "sprint15",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Деплой бэкенда.Развернутый сервер API",
   "main": "app.js",
   "scripts": {
